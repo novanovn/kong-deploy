@@ -26,7 +26,11 @@ services:
       KONG_PG_DATABASE: kong  # Nama database
       KONG_PORTAL: "true"  # Aktifkan portal Kong jika diperlukan
       KONG_PORTAL_GUI_HOST: kong.parahyangandigital.cloud:8003  # Host untuk GUI portal (jika diperlukan)
-      KONG_PORTAL_API_URI: http://kong:8000  # API URI untuk portal
+      KONG_PORT_ADMIN: 8001
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+      KONG_PORTAL_API_URI: http://localhost:8000  # API URI untuk portal
+    volumes:
+      - ./kong-config-http/kong.conf:/etc/kong/kong.conf  # Pastikan file kong.conf berada di folder lokal
     ports:
       - "8000:8000"  # Port untuk HTTP API
       - "8001:8001"  # Port untuk Admin API
