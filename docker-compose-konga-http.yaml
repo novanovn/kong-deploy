@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  kong-db:
+    image: postgres:13
+    container_name: kong-db
+    environment:
+      POSTGRES_USER: kong
+      POSTGRES_PASSWORD: kong_password
+      POSTGRES_DB: kong
+    volumes:
+      - kong-db-data:/var/lib/postgresql/data  # Pastikan data disimpan dalam volume yang persisten
+    networks:
+      - kong-net
+    restart: always
+
+  kong:
+    image: kong:latest
+    container_name: kong
+    environment:
+      KONG_DATABASE: "postgres"  # Gunakan PostgreSQL sebagai database
+      KONG_PG_HOST: kong-db  # Alamat host untuk database PostgreSQL
+      KONG_PG_PORT: 5432  # Port database PostgreSQL
+      KONG_PG_USER: kong  # User database
+      KONG_PG_PASSWORD: kong_password  # Password database
+      KONG_PG_DATABASE: kong  # Nama database
+      KONG_PORTAL: "true"  # Aktifkan portal Kong jika diperlukan
+      KONG_PORTAL_GUI_HOST: kong.parahyangandigital.cloud:8003  # Host untuk GUI portal (jika diperlukan)
+      KONG_PORTAL_API_URI: http://kong:8000  # API URI untuk portal
+    ports:
+      - "8000:8000"  # Port untuk HTTP API
+      - "8001:8001"  # Port untuk Admin API
+      - "8003:8003"  # Port untuk Kong Admin UI (jika portal diaktifkan)
+    networks:
+      - kong-net
+    depends_on:
+      - kong-db
+    restart: always
+
+  konga:
+    image: pantsel/konga:latest
+    container_name: konga
+    environment:
+      DB_ADAPTER: "postgres"  # Gunakan database PostgreSQL
+      DB_HOST: kong-db  # Alamat database PostgreSQL
+      DB_PORT: "5432"  # Port database PostgreSQL
+      DB_USER: kong  # User database PostgreSQL
+      DB_PASSWORD: kong_password  # Password database PostgreSQL
+      DB_NAME: kong  # Nama database
+    ports:
+      - "1337:1337"  # Port untuk mengakses Konga UI
+    depends_on:
+      - kong
+      - kong-db
+    networks:
+      - kong-net
+    restart: always
+
+  kong-migrations:
+    image: kong:latest
+    container_name: kong-migrations
+    entrypoint: ["kong", "migrations", "bootstrap"]  # Menjalankan migrasi untuk menyiapkan database
+    environment:
+      KONG_DATABASE: "postgres"  # Gunakan PostgreSQL sebagai database
+      KONG_PG_HOST: kong-db  # Host untuk database PostgreSQL
+      KONG_PG_PORT: 5432  # Port database PostgreSQL
+      KONG_PG_USER: kong  # User database
+      KONG_PG_PASSWORD: kong_password  # Password database
+      KONG_PG_DATABASE: kong  # Nama database
+    networks:
+      - kong-net
+    depends_on:
+      - kong-db  # Pastikan database siap sebelum menjalankan migrasi
+    restart: "no"  # Tidak perlu restart karena ini hanya untuk menjalankan migrasi sekali
+
+volumes:
+  kong-db-data:  # Volume untuk menyimpan data PostgreSQL agar persisten
+
+networks:
+  kong-net:
+    driver: bridge
