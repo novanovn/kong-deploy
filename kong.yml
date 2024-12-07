@@ -1,0 +1,8 @@
+_format_version: "2.0"
+services:
+  - name: sales-service
+    url: https://sales.parahyangandigital.cloud/penjualan  # URL API di data center Semarang
+    routes:
+      - name: sales-route
+        paths:
+          - /penjualan  # Path yang digunakan untuk mengakses API ini melalui Kong

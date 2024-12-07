@@ -29,11 +29,15 @@ services:
       KONG_ADMIN_LISTEN: 0.0.0.0:8444 ssl  # Enable Admin API di port 8444 dengan HTTPS
       KONG_ADMIN_GUI_HOST: kong.parahyangandigital.cloud
       KONG_ADMIN_GUI_PROTOCOL: https  # Gunakan HTTPS untuk Admin GUI
-      KONG_SSL_CERT: /etc/ssl/certs/fullchain.pem  # Path ke sertifikat SSL
-      KONG_SSL_CERT_KEY: /etc/ssl/private/privkey.pem  # Path ke private key SSL
+      KONG_SSL_CERT: /etc/ssl/certs/kong.parahyangandigital.cloud.crt  # Path ke sertifikat SSL
+      KONG_SSL_CERT_KEY: /etc/ssl/private/kong.parahyangandigital.cloud.key  # Path ke private key SSL
     volumes:
-      - ./certs/fullchain.pem:/etc/ssl/certs
-      - ./certs/privkey.pem:/etc/ssl/private
+      # Mount sertifikat dan kunci SSL yang dihasilkan oleh Let's Encrypt
+      - /etc/letsencrypt/live/kong.parahyangandigital.cloud/fullchain.pem:/etc/ssl/certs/kong.parahyangandigital.cloud.crt
+      - /etc/letsencrypt/live/kong.parahyangandigital.cloud/privkey.pem:/etc/ssl/private/kong.parahyangandigital.cloud.key
+      # Mount file konfigurasi kong.conf
+      - ./kong.conf:/etc/kong/kong.conf  # Menambahkan volume untuk kong.conf
+      - ./kong.yml:/etc/kong/kong.yml
     ports:
       - "8000:8000"  # Port untuk HTTP API Gateway (opsional)
       - "8443:8443"  # Port untuk HTTPS API Gateway (opsional)

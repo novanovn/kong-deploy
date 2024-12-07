@@ -32,8 +32,8 @@ services:
       KONG_SSL_CERT: /etc/ssl/certs/fullchain.pem  # Path ke sertifikat SSL
       KONG_SSL_CERT_KEY: /etc/ssl/private/privkey.pem  # Path ke private key SSL
     volumes:
-      - ./certs/fullchain.pem:/etc/ssl/certs
-      - ./certs/privkey.pem:/etc/ssl/private
+      - ./certs/fullchain.pem:/etc/ssl/certs/fullchain.pem
+      - ./certs/privkey.pem:/etc/ssl/private/privkey.pem
     ports:
       - "8000:8000"  # Port untuk HTTP API Gateway (opsional)
       - "8443:8443"  # Port untuk HTTPS API Gateway (opsional)
