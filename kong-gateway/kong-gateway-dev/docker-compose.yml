@@ -73,9 +73,10 @@ services:
       - "8443:8443"  # Port untuk HTTPS API Traffic
       - "8011:8001"  # Port untuk HTTP Admin API
       - "8444:8444"  # Port untuk HTTP Admin API
+      - "8002:8002"  # Port untuk Kong Admin UI (jika portal diaktifkan)
       # - "127.0.0.1:8444:8444/tcp"
-      - "127.0.0.1:8002:8002/tcp"
-      - "127.0.0.1:8001:8001/tcp"
+      # - "127.0.0.1:8002:8002/tcp"
+      # - "127.0.0.1:8001:8001/tcp"
     healthcheck:
       test: [ "CMD", "kong", "health" ]
       interval: 10s
