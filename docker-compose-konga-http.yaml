@@ -34,7 +34,7 @@ services:
     ports:
       - "8000:8000"  # Port untuk HTTP API
       - "8009:8001"  # Port untuk Admin API
-      - "8003:8003"  # Port untuk Kong Admin UI (jika portal diaktifkan)
+      - "8008:8003"  # Port untuk Kong Admin UI (jika portal diaktifkan)
     networks:
       - kong-net
     depends_on:
