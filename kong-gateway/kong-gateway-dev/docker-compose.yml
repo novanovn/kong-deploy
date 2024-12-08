@@ -64,6 +64,8 @@ services:
       KONG_PROXY_ERROR_LOG: /dev/stderr
       KONG_PREFIX: ${KONG_PREFIX:-/var/run/kong}
       KONG_TRACING_INSTRUMENTATIONS: "request"
+    volumes:
+      - ./config/kong.conf:/etc/kong/kong.conf  # Pastikan file kong.conf berada di folder lokal
     networks:
       - kong-net
     ports:
