@@ -1,5 +1,0 @@
-plugins = bundled, mandate_header
-log_level = debug
-admin_listen = 0.0.0.0:8444   # Bind Admin API to 0.0.0.0 to allow access from any IP
-admin_api_username = admin     # Username for Admin API (for security)
-admin_api_password = gfGSQ8liGvx9u@ # Password for Admin API (change this to something secure)
